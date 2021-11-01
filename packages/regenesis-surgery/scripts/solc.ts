@@ -13,6 +13,7 @@ import {
   LOCAL_SOLC_DIR,
   EVM_SOLC_CACHE_DIR,
   OVM_SOLC_CACHE_DIR,
+  SOURCIFY_DIR,
 } from './constants'
 import { EtherscanContract } from './types'
 
@@ -202,10 +203,12 @@ const readCompilerCache = (
 const writeCompilerCache = (
   target: 'evm' | 'ovm',
   hash: string,
-  content: any
+  content: any,
+  contractAddress: string
 ) => {
   const cacheDir = target === 'evm' ? EVM_SOLC_CACHE_DIR : OVM_SOLC_CACHE_DIR
   fs.writeFileSync(path.join(cacheDir, hash), JSON.stringify(content))
+  fs.writeFileSync(path.join(SOURCIFY_DIR, contractAddress), JSON.stringify(content))
 }
 
 export const compile = (opts: {
@@ -250,7 +253,7 @@ export const compile = (opts: {
   let output = readCompilerCache(compilerTarget, inputHash)
   if (output === undefined) {
     output = JSON.parse(solcInstance.compile(input))
-    writeCompilerCache(compilerTarget, inputHash, output)
+    writeCompilerCache(compilerTarget, inputHash, output, opts.contract.contractAddress)
   }
 
   if (!output.contracts) {
