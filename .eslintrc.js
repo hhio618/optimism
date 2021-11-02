@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  ignorePatterns: ['dist', 'packages/contracts/hardhat'],
+  ignorePatterns: ['dist', 'packages/contracts/hardhat', 'coverage'],
   extends: ['plugin:prettier/recommended'],
   parser: 'babel-eslint',
   parserOptions: {
